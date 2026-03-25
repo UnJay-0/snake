@@ -4,6 +4,7 @@ from pathlib import Path
 from src.utils import UP, DOWN, LEFT, RIGHT, CONFIRM, Command
 
 SETTINGS_PATH = Path(__file__).parent.parent / 'config' / 'settings.json'
+GRAPHICS_PATH = Path("assets/graphics")
 
 @dataclass
 class Keybindings:

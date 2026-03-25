@@ -1,20 +1,22 @@
 import pygame
 from src import utils
+from src.utils.app_settings import GRAPHICS_PATH
 from src.entities.cell import Cell, Cells
 from src.entities import HEAD_TYPE, MIDDLE_TYPE, TAIL_TYPE
-SNAKE_ASSETS_PATH = "assets/graphics/snake"
+SNAKE_ASSETS_PATH = GRAPHICS_PATH / "snake"
 
 
 class Snake():
+    __HEAD_INDEX = 0
 
     def __init__(self, head_position:tuple, direction: utils.Command, field_dimensions:list):
         self.head_frames = [
-            pygame.image.load(SNAKE_ASSETS_PATH + f"/head/snake_head{i}.png").convert_alpha() for i in range(1, 5)
+            pygame.image.load(SNAKE_ASSETS_PATH / f"head/snake_head{i}.png").convert_alpha() for i in range(1, 5)
         ]
         self.tail_frames = [
-            pygame.image.load(SNAKE_ASSETS_PATH + f"/tail/snake_tail{i}.png").convert_alpha() for i in range(1, 5)
+            pygame.image.load(SNAKE_ASSETS_PATH / f"tail/snake_tail{i}.png").convert_alpha() for i in range(1, 5)
         ]
-        self.middle = pygame.image.load(SNAKE_ASSETS_PATH + "/snake_body.png").convert_alpha()
+        self.middle = pygame.image.load(SNAKE_ASSETS_PATH / "snake_body.png").convert_alpha()
         self.field_dimensions = field_dimensions
         self.body = self.__construct_initial_body(head_position, direction)
 
@@ -47,6 +49,13 @@ class Snake():
     def add_direction(self, direction: utils.Command):
         self.head_orientation = direction.orientation
         self.body.apply_direction(direction)
+
+
+    def get_head_cell(self) -> Cell:
+        return self.body.get_cell(self.__HEAD_INDEX)
+
+    def head_collision(self, sprite: pygame.sprite.Sprite):
+        pass
 
     def update(self):
         self.body.update()
