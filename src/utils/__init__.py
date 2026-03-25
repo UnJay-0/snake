@@ -8,10 +8,17 @@ from random import choice
 class Command:
     name: str
     value: int
-    opposite: int
+    orientation: int
 
     def get_opposite(self) -> Command:
-        return Command("", self.opposite, self.value)
+        return Command("", -self.value, self.orientation)
+
+    def evaluate_orientation(self, new_value: int) -> bool:
+        sign = self.get_sign()
+        return self.orientation * sign * new_value > 0
+
+    def get_sign(self):
+        return (self.value > 0) - (self.value < 0)
 
     def __str__(self) -> str:
         return self.name
@@ -22,11 +29,14 @@ class Command:
         return False
 
 
-UP = Command("UP", 0, 1)
-DOWN = Command("DOWN", 1, 0)
-LEFT = Command("LEFT", 2, 3)
-RIGHT = Command("RIGHT", 3, 2)
-CONFIRM = Command("CONFIRM", 4, None)
+
+
+
+UP = Command("UP", 1, -1)
+DOWN = Command("DOWN", -1, -1)
+LEFT = Command("LEFT", -2, 1)
+RIGHT = Command("RIGHT", 2, 1)
+CONFIRM = Command("CONFIRM", 4, 0)
 
 
 

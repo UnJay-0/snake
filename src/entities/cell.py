@@ -31,7 +31,6 @@ class Cell(pygame.sprite.Sprite):
     def get_position(self) -> tuple:
         return self.rect.topleft
 
-
     def _normalize(self, position: tuple) -> tuple:
         x = (((position[0] - (self.field_dimensions[0][0])) %
             (self.field_dimensions[0][1] - self.field_dimensions[0][0]))
@@ -48,20 +47,43 @@ class Cell(pygame.sprite.Sprite):
 class Cells():
     def __init__(self, *cells: Cell):
         # Sorting by type (HEAD - MIDDLE - TAIL)
-        self.cells = pygame.sprite.Group(sorted(cells, key=attrgetter("type")))
+        self.cells = pygame.sprite.Group(*sorted(cells, key=attrgetter("type")))
         self.head_direction = self.cells.sprites()[0].current_direction
 
     def apply_direction(self, direction: utils.Command):
         if not self.cells.sprites()[0].current_direction.get_opposite() == direction:
             self.head_direction = direction
-            print(direction)
+
+    @staticmethod
+    def elaborate_first_direction(direction: utils.Command) -> tuple:
+        match direction:
+            case utils.UP:
+                return (Cells.__rotate, True, 0, CELL_DIMENSION)
+            case utils.DOWN:
+                return (Cells.__rotate, False, 0, -CELL_DIMENSION)
+            case utils.LEFT:
+                return (Cells.__flip, True, CELL_DIMENSION, 0)
+            case utils.RIGHT:
+                return (None, False, -CELL_DIMENSION, 0)
+
+    @staticmethod
+    def __flip(surface: pygame.Surface, horizontally: bool) -> pygame.Surface:
+        return pygame.transform.flip(surface, horizontally, not horizontally)
+
+    @staticmethod
+    def __rotate(surface: pygame.Surface, up: bool) -> pygame.Surface:
+        return pygame.transform.rotate(surface, 90 if up else -90)
 
     def update(self):
         prev_direction = self.head_direction
         new_cells = []
         for cell in self.cells.sprites():
-                new_cells.append(cell.next(prev_direction))
-                prev_direction = cell.current_direction
+            new_cell = cell.next(prev_direction)
+            if prev_direction != cell.current_direction:
+                rotation_direction = cell.current_direction.evaluate_orientation(prev_direction.get_sign())
+                new_cell.image = Cells.__rotate(new_cell.image, rotation_direction)
+            new_cells.append(new_cell)
+            prev_direction = cell.current_direction
         self.cells = pygame.sprite.Group(*new_cells)
 
     def render(self, surface: pygame.Surface):

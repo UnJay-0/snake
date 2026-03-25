@@ -7,6 +7,7 @@ from src.utils.app_settings import AppSettings
 
 class GameState(State):
     def __init__(self, app_settings: AppSettings):
+        self.paused = False
         self.app_settings = app_settings
         head_position = self.__random_snake_position()
         direction = random_direction_from_all()
@@ -28,9 +29,13 @@ class GameState(State):
                 self.reset()
                 print("*" * 20, "RESET", "*" * 20)
                 print(self.snake)
+            if event.key == pygame.K_SPACE:
+                self.paused = not self.paused
+
 
     def update(self):
-        self.snake.update()
+        if not self.paused:
+            self.snake.update()
 
     def reset(self):
         self.snake.reset(self.__random_snake_position(), random_direction_from_all())
