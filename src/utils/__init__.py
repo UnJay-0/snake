@@ -21,7 +21,7 @@ class Command:
         return (self.value > 0) - (self.value < 0)
 
     def __str__(self) -> str:
-        return self.name
+        return f"{self.name} - {self.value} - {self.orientation}"
 
     def __eq__(self, other: object) -> bool:
         if type(other) is Command:
@@ -29,16 +29,11 @@ class Command:
         return False
 
 
-
-
-
 UP = Command("UP", 1, -1)
 DOWN = Command("DOWN", -1, -1)
 LEFT = Command("LEFT", -2, 1)
 RIGHT = Command("RIGHT", 2, 1)
 CONFIRM = Command("CONFIRM", 4, 0)
-
-
 
 def random_direction(allowed: list[Command]) -> Command:
     return choice(allowed)

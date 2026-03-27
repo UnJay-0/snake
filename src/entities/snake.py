@@ -7,7 +7,6 @@ SNAKE_ASSETS_PATH = GRAPHICS_PATH / "snake"
 
 
 class Snake():
-    __HEAD_INDEX = 0
 
     def __init__(self, head_position:tuple, direction: utils.Command, field_dimensions:list):
         self.head_frames = [
@@ -52,10 +51,13 @@ class Snake():
 
 
     def get_head_cell(self) -> Cell:
-        return self.body.get_cell(self.__HEAD_INDEX)
+        return self.body.get_cell(True)
 
-    def head_collision(self, sprite: pygame.sprite.Sprite):
-        pass
+    def increase(self):
+        self.body.add(MIDDLE_TYPE, self.middle.copy())
+
+    def head_collision(self) -> bool:
+        return self.body.check_collision()
 
     def update(self):
         self.body.update()

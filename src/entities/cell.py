@@ -28,6 +28,11 @@ class Cell(pygame.sprite.Sprite):
         new_position = self._normalize(new_position)
         return Cell(self.type, self.image, new_position, self.field_dimensions, direction)
 
+    def prev(self) -> Cell:
+        new_cell = self.next(self.direction.get_opposite())
+        new_cell.direction = self.direction
+        return new_cell
+
     def get_position(self) -> tuple:
         return self.rect.topleft
 
@@ -66,6 +71,25 @@ class Cells():
     def get_cell(self, index: int):
         return self.cells.sprites()[index]
 
+    def add(self, cell_order: int, surface: pygame.Surface):
+        last_cell = self.cells.sprites()[-1]
+        transformation, type, _, _ = Cells.elaborate_first_direction(last_cell.direction)
+        new_cell = Cell(
+            cell_order,
+            transformation(surface, type) if transformation != None else surface,
+            last_cell.rect.topleft,
+            last_cell.field_dimensions,
+            last_cell.direction
+        )
+        new_cells = self.cells.sprites()[0:-1]
+        new_cells.extend([
+            new_cell,
+            last_cell.prev()
+        ])
+        self.cells = pygame.sprite.Group(
+            *new_cells
+        )
+
     @staticmethod
     def elaborate_first_direction(direction: utils.Command) -> tuple:
         match direction:
@@ -85,6 +109,13 @@ class Cells():
     @staticmethod
     def __rotate(surface: pygame.Surface, up: bool) -> pygame.Surface:
         return pygame.transform.rotate(surface, 90 if up else -90)
+
+    def check_collision(self) -> bool:
+        head_position = self.cells.sprites()[0].get_position()
+        for cell in self.cells.sprites()[1:]:
+            if head_position == cell.get_position():
+                return True
+        return False
 
     def update(self):
         prev_direction = self.head_direction
