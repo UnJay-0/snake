@@ -2,6 +2,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from random import choice
 
+import pygame
+
 
 
 @dataclass(frozen=True)
@@ -40,3 +42,7 @@ def random_direction(allowed: list[Command]) -> Command:
 
 def random_direction_from_all() -> Command:
     return random_direction([UP, DOWN, LEFT, RIGHT])
+
+
+def get_time_string() -> str:
+    pass

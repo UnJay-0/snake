@@ -9,8 +9,9 @@ class Apple(pygame.sprite.Sprite):
         self.image = pygame.image.load(APPLE_ASSETS_PATH / "apple.png")
         self.rect = self.image.get_rect(topleft=position)
 
-    def apply(self, snake: Snake):
+    def apply(self, snake: Snake, score: int) -> int:
         snake.increase()
+        return score + 1
 
 
     def update(self):
