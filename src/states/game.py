@@ -4,7 +4,7 @@ from src.entities.game_time import GameTimer
 from src.entities.grid import Grid
 from src.entities.snake import Snake
 from src.states.state import State
-from src.utils import random_direction_from_all, get_time_string
+from src.utils import random_direction_from_all
 from src.utils.app_settings import AppSettings, FONTS_PATH
 
 BIG_FONT_SIZE = 70
