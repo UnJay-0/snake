@@ -23,7 +23,8 @@ class GameState(State):
         self.snake = Snake(
             self.grid.random_position(),
             random_direction_from_all(),
-            self.app_settings.field_dimensions
+            self.app_settings.field_dimensions,
+            self.app_settings.frame_rate
         )
         self.apples = pygame.sprite.Group(Apple(self.grid.random_position()))
         # SCORE VALUES

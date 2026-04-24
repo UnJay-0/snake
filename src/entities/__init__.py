@@ -1,3 +1,6 @@
 HEAD_TYPE = 0
+HEAD_NAME = "head"
 MIDDLE_TYPE = 1
+MIDDLE_NAME = "middle"
 TAIL_TYPE = 2
+TAIL_NAME = "tail"
